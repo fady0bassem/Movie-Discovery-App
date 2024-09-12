@@ -1,7 +1,8 @@
 [versions]
 agp = "8.5.2"
 hiltAndroid = "2.49"
-kotlin = "1.9.25"
+hiltLifecycleViewmodel = "1.0.0-alpha03"
+kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -15,9 +16,14 @@ materialVersion = "1.7.1"
 constraintlayoutCompose = "1.0.1"
 navigationCompose = "2.8.0"
 ksp = "2.0.20-1.0.24"
+daggerHilt = "2.51.1"
+runtime = "1.7.1"
+safeargs = "2.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "hiltLifecycleViewmodel" }
+androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -46,5 +52,7 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
+safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "safeargs" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

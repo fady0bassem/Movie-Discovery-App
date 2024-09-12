@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -57,7 +58,10 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation (libs.androidx.navigation.fragment.ktx)
     implementation (libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.runtime)
 
+    implementation (libs.hilt.android)
+    implementation (libs.androidx.hilt.lifecycle.viewmodel)
 
     testImplementation(libs.junit)
 
