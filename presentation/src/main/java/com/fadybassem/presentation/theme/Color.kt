@@ -1,4 +1,4 @@
-package com.fadybassem.moviediscoveryapp.ui.theme
+package com.fadybassem.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
