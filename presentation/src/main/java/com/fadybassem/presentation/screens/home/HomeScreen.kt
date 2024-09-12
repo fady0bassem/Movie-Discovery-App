@@ -14,6 +14,8 @@ private fun HomeScreenPreview() {
 }
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    //viewModel: HomeViewModel = hiltViewModel(),
+) {
     Text("Home")
 }

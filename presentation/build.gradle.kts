@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
+    id("kotlin-parcelize")
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -19,8 +22,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
@@ -56,12 +58,15 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.material)
     implementation(libs.androidx.navigation.compose)
-    implementation (libs.androidx.navigation.fragment.ktx)
-    implementation (libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.runtime)
 
-    implementation (libs.hilt.android)
-    implementation (libs.androidx.hilt.lifecycle.viewmodel)
+    implementation(libs.hilt.android)
+    implementation(libs.dagger.hilt)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.hilt.compiler)
+    implementation(libs.java.inject)
 
     testImplementation(libs.junit)
 
