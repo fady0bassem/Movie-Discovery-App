@@ -73,21 +73,6 @@ fun Fragment.enableTouch() {
     this.requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 }
 
-/** used to adjust bottomSheet height **/
-fun adjustBottomSheetHeight(coordinatorLayout: CoordinatorLayout, dividedScreenSizeBy: Float) {
-    val params = (coordinatorLayout.parent as View).layoutParams as CoordinatorLayout.LayoutParams
-    val height = Resources.getSystem().displayMetrics.heightPixels / dividedScreenSizeBy
-    params.height = height.roundToInt()
-}
-
-/**
- *  change toolbar navigation icons color
- * */
-fun Toolbar.setNavigationIconColor(@ColorInt color: Int) = navigationIcon?.mutate()?.let {
-    it.setTint(color)
-    this.navigationIcon = it
-}
-
 fun Activity.hideSystemUI() {
     WindowCompat.setDecorFitsSystemWindows(window, false)
     WindowInsetsControllerCompat(window, this.window.decorView).let { controller ->

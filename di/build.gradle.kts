@@ -54,6 +54,12 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.java.inject)
 
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.retrofit2.kotlin.coroutines.adapter)
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)
