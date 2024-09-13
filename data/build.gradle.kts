@@ -42,6 +42,7 @@ dependencies {
 
     implementation(project(":domain")) // Data depends on domain for interfaces
     implementation(project(":util")) // Data depends on util
+    implementation(project(":core")) // Data depends on core
 
     implementation(libs.androidx.runtime)
 

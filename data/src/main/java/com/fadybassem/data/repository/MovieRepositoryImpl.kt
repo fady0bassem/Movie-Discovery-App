@@ -1,5 +1,6 @@
 package com.fadybassem.data.repository
 
+import com.fadybassem.core.HandleApiError
 import com.fadybassem.data.api.ApiService
 import com.fadybassem.data.remote.mapper.toMoviesDomain
 import com.fadybassem.domain.model.Movies
@@ -12,6 +13,7 @@ import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
     private val movieApi: ApiService,
+    private val handleApiError: HandleApiError,
 ) : MovieRepository {
 
     override fun getPopularMovies(sortBy: String): Flow<Resource<Movies>> = flow {
@@ -25,9 +27,10 @@ class MovieRepositoryImpl @Inject constructor(
 
         } catch (exception: HttpException) {
             exception.printStackTrace()
+            val handleApiError = handleApiError.handleApiErrors(error = exception)
             emit(
                 Resource.Failed(
-                    message = exception.localizedMessage,
+                    message = handleApiError,
                     code = exception.code(),
                     exception = exception
                 )
@@ -37,5 +40,4 @@ class MovieRepositoryImpl @Inject constructor(
             emit(Resource.Error(message = exception.localizedMessage))
         }
     }
-
 }

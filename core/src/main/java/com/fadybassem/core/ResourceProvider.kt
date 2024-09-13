@@ -1,4 +1,4 @@
-package com.fadybassem.util
+package com.fadybassem.core
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext

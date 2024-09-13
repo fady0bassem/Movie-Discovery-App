@@ -1,10 +1,14 @@
 package com.fadybassem.di
 
+import android.content.Context
+import com.fadybassem.core.HandleApiError
+import com.fadybassem.core.ResourceProvider
 import com.fadybassem.data.remote.network.Interceptor
-import com.fadybassem.data.remote.network_exception.HandleApiError
+import com.fadybassem.util.NetworkManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,7 +35,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHandleApiError(): HandleApiError {
-        return HandleApiError()
+    fun provideHandleApiError(resourceProvider: ResourceProvider): HandleApiError {
+        return HandleApiError(resourceProvider = resourceProvider)
     }
+
+    @Singleton
+    @Provides
+    fun provideNetworkManager(@ApplicationContext context: Context): NetworkManager =
+        NetworkManager(context = context)
+
 }

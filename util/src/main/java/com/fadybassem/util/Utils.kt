@@ -2,24 +2,14 @@ package com.fadybassem.util
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.res.Resources
-import android.net.Uri
-import android.text.Spanned
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.annotation.ColorInt
-import androidx.appcompat.widget.Toolbar
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.text.HtmlCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
-import java.util.regex.Pattern
-import kotlin.math.roundToInt
 
 /**
  * show toast message with context

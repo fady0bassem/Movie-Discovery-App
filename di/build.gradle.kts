@@ -41,7 +41,8 @@ dependencies {
 
     implementation(project(":data")) // DI depends on data for repository implementations
     implementation(project(":domain")) // DI depends on domain for repository interfaces
-    implementation(project(":util")) // Data depends on util
+    implementation(project(":util")) // DI depends on util
+    implementation(project(":core")) // DI depends on core
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

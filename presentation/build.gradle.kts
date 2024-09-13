@@ -45,6 +45,7 @@ dependencies {
 
     implementation(project(":domain")) // UI depends on domain for ViewModels
     implementation(project(":util")) // Data depends on util
+    implementation(project(":core")) // Data depends on core
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -61,6 +62,8 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.runtime)
+
+    implementation(libs.coil.compose)
 
     implementation(libs.hilt.android)
     implementation(libs.dagger.hilt)

@@ -38,6 +38,7 @@ android {
 dependencies {
 
     implementation(project(":util")) // Domain depends on util
+    implementation(project(":core")) // Domain depends on core
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

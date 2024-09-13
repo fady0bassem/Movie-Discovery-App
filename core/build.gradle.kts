@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.fadybassem.util"
+    namespace = "com.fadybassem.core"
     compileSdk = 34
 
     defaultConfig {
@@ -36,7 +36,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core")) // Util depends on core
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

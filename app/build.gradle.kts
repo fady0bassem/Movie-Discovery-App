@@ -58,7 +58,8 @@ dependencies {
 
     implementation(project(":presentation")) // app depends on presentation for adding views in activities
     implementation(project(":di")) // app depends on di to init modules in Application
-    implementation(project(":util")) // Data depends on util
+    implementation(project(":util")) // app depends on util
+    implementation(project(":core")) // app depends on core
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

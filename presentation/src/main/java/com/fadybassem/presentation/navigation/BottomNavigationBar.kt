@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import com.fadybassem.presentation.R
+import com.fadybassem.core.R
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {

@@ -10,6 +10,13 @@
     <string name="no_data_available">No Data Available</string>
     <string name="not_found">Something went wrong!</string>
     <string name="api_error_not_allowed">Method not allowed</string>
+    <string name="request_timed_out">Request timed out</string>
+    <string name="bad_request">Bad Request</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="forbidden">Forbidden</string>
+    <string name="server_error">Internal Server Error</string>
+    <string name="unknown_error">Unknown error occurred</string>
+    <string name="something_went_wrong">Something went wrong</string>
 
     <!--Common-->
     <string name="online">Back Online!</string>
@@ -17,4 +24,7 @@
     <!--Home-->
     <string name="home">Home</string>
     <string name="watchlist">Watchlist</string>
+    <string name="popular_movies">Popular Movies</string>
+    <string name="year_movies">2024 Movies</string>
+
 </resources>

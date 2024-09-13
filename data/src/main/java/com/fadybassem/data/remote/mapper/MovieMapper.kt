@@ -4,6 +4,7 @@ import com.fadybassem.data.remote.response.MovieResponseModel
 import com.fadybassem.data.remote.response.MoviesResponseModel
 import com.fadybassem.domain.model.Movie
 import com.fadybassem.domain.model.Movies
+import com.fadybassem.util.AppConfiguration.Companion.IMAGE_BASE_URL
 
 fun MoviesResponseModel.toMoviesDomain(): Movies {
     return Movies(
@@ -24,7 +25,7 @@ fun MovieResponseModel.toMovieDomain(): Movie {
         originalTitle = originalTitle,
         overview = overview,
         popularity = popularity,
-        posterPath = posterPath,
+        posterPath = posterPath?.let { IMAGE_BASE_URL + it },
         releaseDate = releaseDate,
         title = title,
         video = video,

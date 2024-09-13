@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
-import com.fadybassem.presentation.R
+import com.fadybassem.core.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
