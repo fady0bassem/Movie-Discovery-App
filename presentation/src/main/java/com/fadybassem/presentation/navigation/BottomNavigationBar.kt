@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.fadybassem.core.R
 
@@ -26,8 +27,13 @@ fun BottomNavigationBar(navController: NavHostController) {
             selected = currentRoute(navController) == MainRoutes.Home.route,
             onClick = {
                 navController.navigate(MainRoutes.Home.route) {
-                    popUpTo(MainRoutes.Home.route) { inclusive = true }
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true // Save state when popping back
+                    }
+                    launchSingleTop = true // Ensure that the same destination is not added multiple times
+                    restoreState = true // Restore previous state
                 }
+
             })
         BottomNavigationItem(icon = {
             Icon(
@@ -39,8 +45,13 @@ fun BottomNavigationBar(navController: NavHostController) {
             selected = currentRoute(navController) == MainRoutes.Watchlist.route,
             onClick = {
                 navController.navigate(MainRoutes.Watchlist.route) {
-                    popUpTo(MainRoutes.Home.route) { inclusive = false }
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true // Save state when popping back
+                    }
+                    launchSingleTop = true // Ensure that the same destination is not added multiple times
+                    restoreState = true // Restore previous state
                 }
+
             })
     }
 }

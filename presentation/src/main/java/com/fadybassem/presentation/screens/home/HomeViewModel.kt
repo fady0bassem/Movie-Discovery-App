@@ -5,19 +5,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.fadybassem.domain.model.Movie
+import com.fadybassem.domain.usecase.Get2024MoviesPagingSourceUseCase
 import com.fadybassem.domain.usecase.GetPopularMoviesUseCase
 import com.fadybassem.util.SORT_BY_POPULARITY_DESC
+import com.fadybassem.util.SORT_BY_RELEASE_DATE_DESC
 import com.fadybassem.util.Status
+import com.fadybassem.util.YEAR
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val moviesUseCase: GetPopularMoviesUseCase,
+    private val get2024MoviesPagingSourceUseCase: Get2024MoviesPagingSourceUseCase,
 ) : ViewModel(), DefaultLifecycleObserver {
 
     val apiStatus = mutableStateOf<Status?>(Status.DEFAULT)
@@ -25,24 +32,54 @@ class HomeViewModel @Inject constructor(
     private val _popularMovies = MutableStateFlow<List<Movie>>(emptyList())
     val popularMovies: StateFlow<List<Movie>> get() = _popularMovies
 
+    private val _moviesPageFlow =
+        MutableStateFlow<PagingData<Pair<Movie, String>>>(PagingData.empty())
+    val moviesPageFlow: StateFlow<PagingData<Pair<Movie, String>>> = _moviesPageFlow
+
     val showApiError: MutableState<Pair<Boolean, String?>> = mutableStateOf(Pair(false, null))
 
     init {
-        getMovies()
+        getMoviesSequentially()
     }
 
-    private fun getMovies() {
+    private fun getMoviesSequentially() {
         viewModelScope.launch {
-            moviesUseCase.execute(sortBy = SORT_BY_POPULARITY_DESC).collect {
-                apiStatus.value = it.apiStatus
-                if(it.apiStatus == Status.SUCCESS) {
-                    it.data?.results?.let { movieArrayList ->
-                        _popularMovies.value = movieArrayList
-                    }
-                } else if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
-                    showApiError.value = Pair(true, it.message)
-                    _popularMovies.value = emptyList()
+            fetchPopularMovies()
+            fetch2024MoviesPagingSource()
+        }
+    }
+
+    private suspend fun fetchPopularMovies() {
+        moviesUseCase.execute(sortBy = SORT_BY_POPULARITY_DESC).collect {
+            apiStatus.value = it.apiStatus
+            if (it.apiStatus == Status.SUCCESS) {
+                it.data?.results?.let { movieArrayList ->
+                    _popularMovies.value = movieArrayList
                 }
+            } else if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
+                showApiError.value = Pair(true, it.message)
+                _popularMovies.value = emptyList()
+            }
+        }
+    }
+
+    private suspend fun fetch2024MoviesPagingSource() {
+        get2024MoviesPagingSourceUseCase.execute(
+            sortBy = SORT_BY_RELEASE_DATE_DESC, year = YEAR, scope = viewModelScope
+        ).collect {
+            apiStatus.value = it.apiStatus
+            if (it.apiStatus == Status.SUCCESS) {
+                it.data?.let { movieArrayList ->
+                    val transformedPagingData = movieArrayList.map { movie ->
+                        val releaseMonth = LocalDate.parse(movie.releaseDate).month.toString()
+                        movie to releaseMonth
+                    }
+
+                    _moviesPageFlow.value = transformedPagingData
+                }
+            } else if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
+                showApiError.value = Pair(true, it.message)
+                _moviesPageFlow.value = PagingData.empty()
             }
         }
     }

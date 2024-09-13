@@ -57,6 +57,9 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.retrofit2.kotlin.coroutines.adapter)
 
+    implementation (libs.androidx.paging.runtime.ktx)
+    implementation (libs.androidx.paging.compose)
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)

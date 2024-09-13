@@ -32,9 +32,9 @@ import com.fadybassem.presentation.theme.AppTheme
 
 @Preview(showBackground = true, showSystemUi = true, apiLevel = 33)
 @Composable
-private fun PopularMoviesItemPreview() {
+private fun PopularMovieItemPreview() {
     AppTheme {
-        PopularMoviesItemView(movie = Movie(
+        PopularMovieItemView(movie = Movie(
             adult = false,
             backdropPath = "/tbgIhYwQ5IAgNaFU1SBBxxNXCmm.jpg",
             genreIds = arrayListOf(80, 28, 30),
@@ -55,7 +55,7 @@ private fun PopularMoviesItemPreview() {
 
 
 @Composable
-internal fun PopularMoviesItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
+internal fun PopularMovieItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
 
     val windowInfo = rememberWindowInfo()
 
@@ -67,7 +67,7 @@ internal fun PopularMoviesItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
         elevation = CardDefaults.cardElevation(0.dp),
         shape = RoundedCornerShape(windowInfo.windowDimensions.verticalPadding * 2),
         colors = CardDefaults.cardColors(containerColor = White),
-        border = BorderStroke(1.dp, Color.DarkGray)
+        border = BorderStroke(1.dp, Color.LightGray)
     ) {
         Box {
             AsyncImage(
@@ -77,8 +77,7 @@ internal fun PopularMoviesItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
                     id = R.string.content_description, "Profile picture"
                 ),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .background(Color.Gray)
+                modifier = Modifier.background(Color.Gray)
             )
 
             movie.originalTitle?.let {

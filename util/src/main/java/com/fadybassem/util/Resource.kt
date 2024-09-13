@@ -23,7 +23,7 @@ sealed class Resource<T>(
         message: String? = null,
         data: T? = null,
         code: Int? = null,
-        exception: HttpException,
+        exception: HttpException? = null,
         vararg payload: Pair<String, Any?> = emptyArray()
     ) : Resource<T>(
         message = message, data = data, apiStatus = Status.FAILED, code = code, exception = exception, payload = payload

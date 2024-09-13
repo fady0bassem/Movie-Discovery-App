@@ -39,5 +39,4 @@ class GetPopularMoviesUseCase @Inject constructor(
             }
         }
     }
-
 }

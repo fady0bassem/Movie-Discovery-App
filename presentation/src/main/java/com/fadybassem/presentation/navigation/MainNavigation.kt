@@ -40,7 +40,7 @@ fun MainNavigation(startDestination: String = MainRoutes.Home.route) {
                 startDestination = startDestination
             ) {
                 composable(MainRoutes.Home.route) {
-                    HomeScreen(navController = navController)
+                    HomeScreen()
                 }
 
                 composable(MainRoutes.Watchlist.route) {

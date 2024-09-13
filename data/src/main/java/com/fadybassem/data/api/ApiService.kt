@@ -10,9 +10,9 @@ interface ApiService {
         @Query("sort_by") sortBy: String,
     ): MoviesResponseModel
 
-    @GET("movie/2024")
+    @GET("discover/movie")
     suspend fun get2024Movies(
-        @Query("sort_by") sortBy: String, // Sort by release date in descending order
+        @Query("sort_by") sortBy: String,
         @Query("primary_release_year") year: Int,
         @Query("page") page: Int,
     ): MoviesResponseModel

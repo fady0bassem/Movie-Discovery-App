@@ -72,6 +72,9 @@ dependencies {
     implementation(libs.java.inject)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    implementation (libs.androidx.paging.runtime.ktx)
+    implementation (libs.androidx.paging.compose)
+
     debugImplementation(libs.ui.tooling)
 
     testImplementation(libs.junit)
