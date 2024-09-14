@@ -37,7 +37,7 @@ fun MainNavigation(startDestination: String = MainRoutes.Home.route) {
 
     var currentScreen by remember { mutableStateOf(startDestination) }
 
-    AppTheme {
+    AppTheme(showNetworkError = true) {
         Scaffold(topBar = {
             TopAppBarWithBackButton(
                 navController = navController, title = when (currentScreen) {

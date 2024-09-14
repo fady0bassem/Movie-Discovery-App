@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
@@ -64,12 +65,14 @@ private fun HomeScreenPreview() {
         HomeView(popularMovies = remember {
             mutableStateOf(
                 listOf(
-                    DummyMovie.movie,
-                    DummyMovie.movie,
-                    DummyMovie.movie
+                    DummyMovie.movie, DummyMovie.movie, DummyMovie.movie
                 )
             )
-        }, moviesPageFlow = dummyPagingData, onMovieClick = {})
+        },
+            moviesPageFlow = dummyPagingData,
+            popularMoviesListState = rememberLazyListState(),
+            moviesListState = rememberLazyListState(),
+            onMovieClick = {})
     }
 }
 
@@ -78,14 +81,14 @@ private fun HomeScreenPreview() {
 fun HomeView(
     popularMovies: State<List<Movie>>,
     moviesPageFlow: LazyPagingItems<Pair<Movie, String>>,
+    popularMoviesListState: LazyListState,
+    moviesListState: LazyListState,
     onMovieClick: (Movie) -> Unit,
 ) {
 
     val windowInfo = rememberWindowInfo()
 
-    val listState = rememberLazyListState()
-
-    var lastVisibleMonth by remember { mutableStateOf<String?>(null) } // Track the last visible month
+    var lastVisibleMonth by remember { mutableStateOf<String?>(null) }
 
     var stickyHeaderMonth by remember { mutableStateOf<String?>(null) }
 
@@ -93,7 +96,7 @@ fun HomeView(
 
     val isHeaderSticky by remember {
         derivedStateOf {
-            listState.firstVisibleItemIndex > 0 || (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset > 0)
+            moviesListState.firstVisibleItemIndex > 0 || (moviesListState.firstVisibleItemIndex == 0 && moviesListState.firstVisibleItemScrollOffset > 0)
         }
     }
 
@@ -103,7 +106,7 @@ fun HomeView(
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(), state = listState
+        modifier = Modifier.fillMaxSize(), state = moviesListState
     ) {
         item {
             Column(
@@ -122,7 +125,7 @@ fun HomeView(
 
                     Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
 
-                    LazyRow {
+                    LazyRow(state = popularMoviesListState) {
                         items(popularMovies.value.size) { index ->
                             val movie = popularMovies.value[index]
                             PopularMovieItemView(movie = movie, onItemClick = {
@@ -175,17 +178,23 @@ fun HomeView(
 
             movieWithMonth?.let { (movie, month) ->
 
-                /*val previousMovieWithMonth = if (index > 0) moviesPageFlow[index - 1] else null
+                val previousMovieWithMonth = if (index > 0) moviesPageFlow[index - 1] else null
                 val previousMonth = previousMovieWithMonth?.second
 
-                if (previousMonth != month) {
+                /*if (previousMonth != month) {
+                    Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
+
                     Text(
+                        modifier = Modifier.padding(
+                            start = windowInfo.windowDimensions.verticalPadding * 2,
+                            end = windowInfo.windowDimensions.verticalPadding * 2
+                        ),
                         text = month,
                         color = Black,
                         style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center,
                     )
-                    Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
+
                 }*/
 
                 val isNewMonth =
@@ -199,7 +208,7 @@ fun HomeView(
                     lastVisibleMonth = month
                 }
 
-                if (index == listState.firstVisibleItemIndex) {
+                if (index == moviesListState.firstVisibleItemIndex) {
                     stickyHeaderMonth = lastVisibleMonth
                 }
 

@@ -36,6 +36,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    showNetworkError: Boolean = false,
     apiStatus: Status? = null,
     scaffoldState: ScaffoldState? = null,
     content: @Composable () -> Unit
@@ -47,7 +48,9 @@ fun AppTheme(
     MaterialTheme(colorScheme = colorScheme, typography = Typography) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
+                if(showNetworkError)
                 ConnectivityStatus()
+
                 content.invoke()
             }
 

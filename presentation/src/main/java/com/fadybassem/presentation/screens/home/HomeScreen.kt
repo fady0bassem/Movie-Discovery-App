@@ -3,10 +3,14 @@ package com.fadybassem.presentation.screens.home
 import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,11 +36,26 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
 
     val showApiError = viewModel.showApiError
 
+    val popularMoviesListState = rememberSaveable(saver = LazyListState.Saver ) {
+        LazyListState(
+            firstVisibleItemIndex = viewModel.popularMoviesScrollIndex,
+            firstVisibleItemScrollOffset = viewModel.popularMoviesScrollOffset
+        )
+    }
+
+    val moviesListState = rememberSaveable(saver = LazyListState.Saver ) {
+        LazyListState(
+            firstVisibleItemIndex = viewModel.moviesScrollIndex,
+            firstVisibleItemScrollOffset = viewModel.moviesScrollOffset
+        )
+    }
+
     AppTheme(apiStatus = apiStatus) {
         Box(modifier = Modifier.fillMaxSize()) {
-            HomeView(
-                popularMovies = popularMovies,
+            HomeView(popularMovies = popularMovies,
                 moviesPageFlow = moviesPageFlow,
+                popularMoviesListState = popularMoviesListState,
+                moviesListState = moviesListState,
                 onMovieClick = {
                     navController.navigate(MainRoutes.Details.route + "/${it.id}")
                 })
@@ -46,6 +65,15 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
                 context.showToastMessage(showApiError.value.second)
                 viewModel.showApiError.value = Pair(false, null)
             }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.popularMoviesScrollIndex = popularMoviesListState.firstVisibleItemIndex
+            viewModel.popularMoviesScrollOffset = popularMoviesListState.firstVisibleItemScrollOffset
+            viewModel.moviesScrollIndex = moviesListState.firstVisibleItemIndex
+            viewModel.moviesScrollOffset = moviesListState.firstVisibleItemScrollOffset
         }
     }
 }

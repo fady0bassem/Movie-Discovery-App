@@ -1,7 +1,10 @@
 package com.fadybassem.presentation.screens.home
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,6 +40,24 @@ class HomeViewModel @Inject constructor(
     val moviesPageFlow: StateFlow<PagingData<Pair<Movie, String>>> = _moviesPageFlow
 
     val showApiError: MutableState<Pair<Boolean, String?>> = mutableStateOf(Pair(false, null))
+
+//    val popularMoviesListState = LazyListState()
+//    val moviesListState = LazyListState()
+
+    var popularMoviesScrollIndex by mutableStateOf(0)
+    var popularMoviesScrollOffset by mutableStateOf(0)
+    var moviesScrollIndex by mutableStateOf(0)
+    var moviesScrollOffset by mutableStateOf(0)
+
+    val popularMoviesListState = LazyListState(
+        firstVisibleItemIndex = popularMoviesScrollIndex,
+        firstVisibleItemScrollOffset = popularMoviesScrollOffset
+    )
+
+    val moviesListState = LazyListState(
+        firstVisibleItemIndex = moviesScrollIndex,
+        firstVisibleItemScrollOffset = moviesScrollOffset
+    )
 
     init {
         getMoviesSequentially()
