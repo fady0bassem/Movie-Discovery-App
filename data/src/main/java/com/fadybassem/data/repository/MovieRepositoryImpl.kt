@@ -6,8 +6,11 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.fadybassem.core.HandleApiError
 import com.fadybassem.data.api.ApiService
+import com.fadybassem.data.remote.mapper.toCreditsDomain
+import com.fadybassem.data.remote.mapper.toMovieDomain
 import com.fadybassem.data.remote.mapper.toMoviesDomain
 import com.fadybassem.data.remote.paging.MoviePagingSource
+import com.fadybassem.domain.model.Credits
 import com.fadybassem.domain.model.Movie
 import com.fadybassem.domain.model.Movies
 import com.fadybassem.domain.repository.MovieRepository
@@ -51,7 +54,7 @@ class MovieRepositoryImpl @Inject constructor(
     override fun get2024MoviesPagingSource(
         sortBy: String,
         year: Int,
-        scope: CoroutineScope
+        scope: CoroutineScope,
     ): Flow<Resource<PagingData<Movie>>> = flow {
         try {
             emit(Resource.Loading())
@@ -70,6 +73,75 @@ class MovieRepositoryImpl @Inject constructor(
             emitAll(pagingDataFlow.map { pagingData ->
                 Resource.Success(pagingData)
             })
+
+        } catch (exception: HttpException) {
+            exception.printStackTrace()
+            val handleApiError = handleApiError.handleApiErrors(error = exception)
+            emit(
+                Resource.Failed(
+                    message = handleApiError, code = exception.code(), exception = exception
+                )
+            )
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            emit(Resource.Error(message = exception.localizedMessage))
+        }
+    }
+
+    override fun getMovieDetails(id: Int): Flow<Resource<Movie>> = flow {
+        try {
+            emit(Resource.Loading())
+
+            val response = movieApi.getMovieDetails(id = id)
+            val moviesDomain = response.toMovieDomain()
+
+            emit(Resource.Success(data = moviesDomain))
+
+        } catch (exception: HttpException) {
+            exception.printStackTrace()
+            val handleApiError = handleApiError.handleApiErrors(error = exception)
+            emit(
+                Resource.Failed(
+                    message = handleApiError, code = exception.code(), exception = exception
+                )
+            )
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            emit(Resource.Error(message = exception.localizedMessage))
+        }
+    }
+
+    override fun getMovieDetailsCredits(id: Int): Flow<Resource<Credits>> = flow {
+        try {
+            emit(Resource.Loading())
+
+            val response = movieApi.getMovieDetailsCredits(id = id)
+            val moviesDomain = response.toCreditsDomain()
+
+            emit(Resource.Success(data = moviesDomain))
+
+        } catch (exception: HttpException) {
+            exception.printStackTrace()
+            val handleApiError = handleApiError.handleApiErrors(error = exception)
+            emit(
+                Resource.Failed(
+                    message = handleApiError, code = exception.code(), exception = exception
+                )
+            )
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            emit(Resource.Error(message = exception.localizedMessage))
+        }
+    }
+
+    override fun getMovieDetailsSimilar(id: Int): Flow<Resource<Movies>> = flow {
+        try {
+            emit(Resource.Loading())
+
+            val response = movieApi.getMovieDetailsSimilar(id = id)
+            val moviesDomain = response.toMoviesDomain()
+
+            emit(Resource.Success(data = moviesDomain))
 
         } catch (exception: HttpException) {
             exception.printStackTrace()

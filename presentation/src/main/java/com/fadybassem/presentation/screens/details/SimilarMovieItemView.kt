@@ -1,4 +1,4 @@
-package com.fadybassem.presentation.screens.home
+package com.fadybassem.presentation.screens.details
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -34,15 +34,14 @@ import com.fadybassem.presentation.theme.AppTheme
 
 @Preview(showBackground = true, showSystemUi = true, apiLevel = 33)
 @Composable
-private fun PopularMovieItemPreview() {
+private fun SimilarMovieItemPreview() {
     AppTheme {
-        PopularMovieItemView(movie = DummyMovie.movie, onItemClick = {})
+        SimilarMovieItemView(movie = DummyMovie.movie, onItemClick = {})
     }
 }
 
 @Composable
-internal fun PopularMovieItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
-
+internal fun SimilarMovieItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
     val windowInfo = rememberWindowInfo()
 
     Card(
@@ -58,12 +57,10 @@ internal fun PopularMovieItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
         Box {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current).data(movie.posterPath)
-                    .error(R.drawable.image_placeholder).fallback(R.drawable.image_placeholder).build(),
-                contentDescription = stringResource(
+                    .error(R.drawable.image_placeholder).fallback(R.drawable.image_placeholder)
+                    .build(), contentDescription = stringResource(
                     id = R.string.content_description, "Profile picture"
-                ),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.background(Color.LightGray)
+                ), contentScale = ContentScale.Crop, modifier = Modifier.background(Color.LightGray)
             )
 
             movie.originalTitle?.let {

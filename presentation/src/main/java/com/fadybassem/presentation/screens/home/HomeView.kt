@@ -37,6 +37,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.fadybassem.core.R
 import com.fadybassem.domain.model.Movie
 import com.fadybassem.presentation.components.screen_size.rememberWindowInfo
+import com.fadybassem.presentation.dummy.DummyMovie
 import com.fadybassem.presentation.theme.AppTheme
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -48,26 +49,9 @@ private fun HomeScreenPreview() {
                 object : PagingSource<Int, Pair<Movie, String>>() {
                     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pair<Movie, String>> {
                         return LoadResult.Page(
-                            data = List(2) { index ->
-                                Pair(
-                                    Movie(
-                                        adult = false,
-                                        backdropPath = "/tbgIhYwQ5IAgNaFU1SBBxxNXCmm.jpg",
-                                        genreIds = arrayListOf(80, 28, 30),
-                                        id = 646097,
-                                        originalLanguage = "en",
-                                        originalTitle = "Rebel Ridge",
-                                        overview = "A former Marine confronts corruption in a small town when local law enforcement unjustly seizes the bag of cash he needs to post his cousin's bail.",
-                                        popularity = 831.205,
-                                        posterPath = "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
-                                        releaseDate = "2024-08-27",
-                                        title = "Rebel Ridge",
-                                        video = false,
-                                        voteAverage = 6.797,
-                                        voteCount = 317,
-                                    ), "April"
-                                )
-                            }, prevKey = null, nextKey = 1 // Adjust based on your paging logic
+                            data = List(2) { Pair(DummyMovie.movie, "April") },
+                            prevKey = null,
+                            nextKey = 1
                         )
                     }
 
@@ -80,52 +64,9 @@ private fun HomeScreenPreview() {
         HomeView(popularMovies = remember {
             mutableStateOf(
                 listOf(
-                    Movie(
-                        adult = false,
-                        backdropPath = "/tbgIhYwQ5IAgNaFU1SBBxxNXCmm.jpg",
-                        genreIds = arrayListOf(80, 28, 30),
-                        id = 646097,
-                        originalLanguage = "en",
-                        originalTitle = "Rebel Ridge",
-                        overview = "A former Marine confronts corruption in a small town when local law enforcement unjustly seizes the bag of cash he needs to post his cousin's bail.",
-                        popularity = 831.205,
-                        posterPath = "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
-                        releaseDate = "2024-08-27",
-                        title = "Rebel Ridge",
-                        video = false,
-                        voteAverage = 6.797,
-                        voteCount = 317,
-                    ), Movie(
-                        adult = false,
-                        backdropPath = "/tbgIhYwQ5IAgNaFU1SBBxxNXCmm.jpg",
-                        genreIds = arrayListOf(80, 28, 30),
-                        id = 646097,
-                        originalLanguage = "en",
-                        originalTitle = "Rebel Ridge",
-                        overview = "A former Marine confronts corruption in a small town when local law enforcement unjustly seizes the bag of cash he needs to post his cousin's bail.",
-                        popularity = 831.205,
-                        posterPath = "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
-                        releaseDate = "2024-08-27",
-                        title = "Rebel Ridge",
-                        video = false,
-                        voteAverage = 6.797,
-                        voteCount = 317,
-                    ), Movie(
-                        adult = false,
-                        backdropPath = "/tbgIhYwQ5IAgNaFU1SBBxxNXCmm.jpg",
-                        genreIds = arrayListOf(80, 28, 30),
-                        id = 646097,
-                        originalLanguage = "en",
-                        originalTitle = "Rebel Ridge",
-                        overview = "A former Marine confronts corruption in a small town when local law enforcement unjustly seizes the bag of cash he needs to post his cousin's bail.",
-                        popularity = 831.205,
-                        posterPath = "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
-                        releaseDate = "2024-08-27",
-                        title = "Rebel Ridge",
-                        video = false,
-                        voteAverage = 6.797,
-                        voteCount = 317,
-                    )
+                    DummyMovie.movie,
+                    DummyMovie.movie,
+                    DummyMovie.movie
                 )
             )
         }, moviesPageFlow = dummyPagingData, onMovieClick = {})

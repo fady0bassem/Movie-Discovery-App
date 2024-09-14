@@ -40,15 +40,15 @@ fun MainNavigation(startDestination: String = MainRoutes.Home.route) {
     AppTheme {
         Scaffold(topBar = {
             TopAppBarWithBackButton(
-                navController = navController, title = when (currentRoute(navController)) {
+                navController = navController, title = when (currentScreen) {
                     MainRoutes.Home.route -> stringResource(id = R.string.home)
                     MainRoutes.Watchlist.route -> stringResource(id = R.string.watchlist)
                     MainRoutes.Details.route -> stringResource(id = R.string.movie_details)
                     else -> stringResource(id = R.string.app_name)
-                }, showNavigationIcon = currentRoute(navController) != MainRoutes.Home.route
+                }, showNavigationIcon = currentScreen != MainRoutes.Home.route
             )
         }, bottomBar = {
-            when (currentRoute(navController)) {
+            when (currentScreen) {
                 MainRoutes.Details.route -> null
                 else -> BottomNavigationBar(navController = navController)
             }

@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,28 +32,14 @@ import coil.request.ImageRequest
 import com.fadybassem.core.R
 import com.fadybassem.domain.model.Movie
 import com.fadybassem.presentation.components.screen_size.rememberWindowInfo
+import com.fadybassem.presentation.dummy.DummyMovie
 import com.fadybassem.presentation.theme.AppTheme
 
 @Preview(showBackground = true, showSystemUi = true, apiLevel = 33)
 @Composable
 private fun PopularMovieItemPreview() {
     AppTheme {
-        MovieItemView(movie = Movie(
-            adult = false,
-            backdropPath = "/tbgIhYwQ5IAgNaFU1SBBxxNXCmm.jpg",
-            genreIds = arrayListOf(80, 28, 30),
-            id = 646097,
-            originalLanguage = "en",
-            originalTitle = "Rebel Ridge",
-            overview = "A former Marine confronts corruption in a small town when local law enforcement unjustly seizes the bag of cash he needs to post his cousin's bail.",
-            popularity = 831.205,
-            posterPath = "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
-            releaseDate = "2024-08-27",
-            title = "Rebel Ridge",
-            video = false,
-            voteAverage = 6.797,
-            voteCount = 317,
-        ), onItemClick = {})
+        MovieItemView(movie = DummyMovie.movie, onItemClick = {})
     }
 }
 
@@ -92,7 +77,11 @@ internal fun MovieItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
                     .background(Color.Transparent)
             )
 
-            Column(modifier = Modifier.weight(1.5f).padding(windowInfo.windowDimensions.verticalPadding)) {
+            Column(
+                modifier = Modifier
+                    .weight(1.5f)
+                    .padding(windowInfo.windowDimensions.verticalPadding)
+            ) {
                 movie.originalTitle?.let {
                     Text(
                         modifier = Modifier
