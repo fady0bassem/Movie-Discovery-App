@@ -2,7 +2,6 @@ package com.fadybassem.presentation.screens.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,7 +28,6 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
@@ -130,7 +128,7 @@ private fun HomeScreenPreview() {
                     )
                 )
             )
-        }, moviesPageFlow = dummyPagingData)
+        }, moviesPageFlow = dummyPagingData, onMovieClick = {})
     }
 }
 
@@ -139,6 +137,7 @@ private fun HomeScreenPreview() {
 fun HomeView(
     popularMovies: State<List<Movie>>,
     moviesPageFlow: LazyPagingItems<Pair<Movie, String>>,
+    onMovieClick: (Movie) -> Unit,
 ) {
 
     val windowInfo = rememberWindowInfo()
@@ -153,26 +152,25 @@ fun HomeView(
 
     val isHeaderSticky by remember {
         derivedStateOf {
-            listState.firstVisibleItemIndex > 0 ||
-                    (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset > 0)
+            listState.firstVisibleItemIndex > 0 || (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset > 0)
         }
     }
 
     LaunchedEffect(isHeaderSticky) {
-        headerBackgroundColor.value = if (isHeaderSticky) Color.Gray.copy(alpha = 0.8f) else Color.White
+        headerBackgroundColor.value =
+            if (isHeaderSticky) Color.Gray.copy(alpha = 0.8f) else Color.White
     }
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            ,
-        state = listState
+        modifier = Modifier.fillMaxSize(), state = listState
     ) {
         item {
-            Column(modifier = Modifier.padding(
-                start = windowInfo.windowDimensions.verticalPadding * 2,
-                end = windowInfo.windowDimensions.verticalPadding * 2
-            )) {
+            Column(
+                modifier = Modifier.padding(
+                    start = windowInfo.windowDimensions.verticalPadding * 2,
+                    end = windowInfo.windowDimensions.verticalPadding * 2
+                )
+            ) {
                 if (popularMovies.value.isNotEmpty()) {
                     Text(
                         text = stringResource(id = R.string.popular_movies),
@@ -186,7 +184,9 @@ fun HomeView(
                     LazyRow {
                         items(popularMovies.value.size) { index ->
                             val movie = popularMovies.value[index]
-                            PopularMovieItemView(movie = movie, onItemClick = { })
+                            PopularMovieItemView(movie = movie, onItemClick = {
+                                onMovieClick.invoke(it)
+                            })
                             Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
                         }
                     }
@@ -211,7 +211,7 @@ fun HomeView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(headerBackgroundColor.value)
-                    
+
                 ) {
                     Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding * 2))
 
@@ -247,13 +247,14 @@ fun HomeView(
                     Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
                 }*/
 
-                val isNewMonth = index == 0 || (index > 0 && month != (moviesPageFlow[index - 1]?.second ?: ""))
+                val isNewMonth =
+                    index == 0 || (index > 0 && month != (moviesPageFlow[index - 1]?.second ?: ""))
 
                 if (isNewMonth) {
                     lastVisibleMonth = month
                 }
 
-                if(lastVisibleMonth != month){
+                if (lastVisibleMonth != month) {
                     lastVisibleMonth = month
                 }
 
@@ -263,7 +264,9 @@ fun HomeView(
 
                 Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
 
-                MovieItemView(movie = movie, onItemClick = { })
+                MovieItemView(movie = movie, onItemClick = {
+                    onMovieClick.invoke(it)
+                })
             }
         }
 

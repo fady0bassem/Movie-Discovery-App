@@ -27,4 +27,8 @@
     <string name="popular_movies">Popular Movies</string>
     <string name="year_movies">2024 Movies</string>
 
+    <!--Watchlist-->
+
+    <!--Details-->
+    <string name="movie_details">Movie Details</string>
 </resources>

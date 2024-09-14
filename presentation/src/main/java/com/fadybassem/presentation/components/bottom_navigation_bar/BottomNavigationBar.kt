@@ -1,4 +1,4 @@
-package com.fadybassem.presentation.navigation
+package com.fadybassem.presentation.components.bottom_navigation_bar
 
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -13,14 +13,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.fadybassem.core.R
+import com.fadybassem.presentation.navigation.main.MainRoutes
+import com.fadybassem.presentation.navigation.main.currentRoute
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
-    BottomNavigation (backgroundColor = Color.Black, contentColor = Color.White){
+    BottomNavigation(backgroundColor = Color.Black, contentColor = Color.White) {
         BottomNavigationItem(icon = {
             Icon(
-                Icons.Filled.Home,
-                contentDescription = stringResource(id = R.string.content_description, MainRoutes.Home.route)
+                Icons.Filled.Home, contentDescription = stringResource(
+                    id = R.string.content_description, MainRoutes.Home.route
+                )
             )
         },
             label = { Text(stringResource(id = R.string.home)) },
@@ -28,17 +31,17 @@ fun BottomNavigationBar(navController: NavHostController) {
             onClick = {
                 navController.navigate(MainRoutes.Home.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true // Save state when popping back
+                        saveState = true
                     }
-                    launchSingleTop = true // Ensure that the same destination is not added multiple times
-                    restoreState = true // Restore previous state
+                    launchSingleTop = true
+                    restoreState = true
                 }
-
             })
         BottomNavigationItem(icon = {
             Icon(
-                Icons.AutoMirrored.Filled.ViewList,
-                contentDescription = stringResource(id = R.string.content_description, MainRoutes.Watchlist.route)
+                Icons.AutoMirrored.Filled.ViewList, contentDescription = stringResource(
+                    id = R.string.content_description, MainRoutes.Watchlist.route
+                )
             )
         },
             label = { Text(stringResource(id = R.string.watchlist)) },
@@ -46,12 +49,11 @@ fun BottomNavigationBar(navController: NavHostController) {
             onClick = {
                 navController.navigate(MainRoutes.Watchlist.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true // Save state when popping back
+                        saveState = true
                     }
-                    launchSingleTop = true // Ensure that the same destination is not added multiple times
-                    restoreState = true // Restore previous state
+                    launchSingleTop = true
+                    restoreState = true
                 }
-
             })
     }
 }

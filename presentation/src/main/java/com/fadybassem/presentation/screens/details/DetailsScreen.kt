@@ -1,4 +1,4 @@
-package com.fadybassem.presentation.screens.watchlist
+package com.fadybassem.presentation.screens.details
 
 import android.app.Activity
 import androidx.compose.foundation.layout.Box
@@ -15,7 +15,7 @@ import com.fadybassem.presentation.theme.AppTheme
 import com.fadybassem.util.ObserveLifecycleEvents
 
 @Composable
-fun WatchlistScreen(navController: NavHostController, viewModel: WatchlistViewModel = hiltViewModel()) {
+fun DetailsScreen(navController: NavHostController, viewModel: DetailsViewModel = hiltViewModel()) {
     viewModel.ObserveLifecycleEvents(LocalLifecycleOwner.current.lifecycle)
 
     val context = LocalContext.current
@@ -25,7 +25,7 @@ fun WatchlistScreen(navController: NavHostController, viewModel: WatchlistViewMo
 
     AppTheme(apiStatus = apiStatus) {
         Box(modifier = Modifier.fillMaxSize()) {
-            WatchlistView()
+            DetailsView()
         }
     }
 }

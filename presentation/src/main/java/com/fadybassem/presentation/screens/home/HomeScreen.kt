@@ -11,13 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.fadybassem.presentation.navigation.main.MainRoutes
 import com.fadybassem.presentation.theme.AppTheme
 import com.fadybassem.util.ObserveLifecycleEvents
 import com.fadybassem.util.showToastMessage
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
     viewModel.ObserveLifecycleEvents(LocalLifecycleOwner.current.lifecycle)
 
     val context = LocalContext.current
@@ -32,7 +34,12 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
     AppTheme(apiStatus = apiStatus) {
         Box(modifier = Modifier.fillMaxSize()) {
-            HomeView(popularMovies = popularMovies, moviesPageFlow = moviesPageFlow)
+            HomeView(
+                popularMovies = popularMovies,
+                moviesPageFlow = moviesPageFlow,
+                onMovieClick = {
+                    navController.navigate(MainRoutes.Details.route + "/${it.id}")
+                })
 
             // show api error toast
             if (showApiError.value.first) {
