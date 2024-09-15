@@ -61,8 +61,6 @@ class MovieRepositoryImpl @Inject constructor(
                             popularity = movie.popularity,
                             posterPath = movie.posterPath,
                             releaseDate = movie.releaseDate,
-                            similarMovies = Converters().fromIntList(movie.similarMovies),
-                            isInWatchlist = movie.isInWatchlist,
                             page = cachedMovie.page
                         )
                     } else {
@@ -160,8 +158,6 @@ class MovieRepositoryImpl @Inject constructor(
                         popularity = movieDomain.popularity,
                         posterPath = movieDomain.posterPath,
                         releaseDate = movieDomain.releaseDate,
-                        similarMovies = cachedMovie.similarMovies,
-                        isInWatchlist = cachedMovie.isInWatchlist,
                         page = cachedMovie.page
                     )
 

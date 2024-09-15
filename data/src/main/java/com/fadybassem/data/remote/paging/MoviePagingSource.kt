@@ -79,8 +79,6 @@ class MoviePagingSource(
                     popularity = movie.popularity,
                     posterPath = movie.posterPath,
                     releaseDate = movie.releaseDate,
-                    similarMovies = Converters().fromIntList(movie.similarMovies),
-                    isInWatchlist = movie.isInWatchlist,
                     page = page
                 )
             } else {
@@ -112,8 +110,6 @@ class MoviePagingSource(
                         popularity = movie.popularity,
                         posterPath = movie.posterPath,
                         releaseDate = movie.releaseDate,
-                        similarMovies = Converters().fromIntList(movie.similarMovies),
-                        isInWatchlist = movie.isInWatchlist,
                         page = page
                     )
                 } else {

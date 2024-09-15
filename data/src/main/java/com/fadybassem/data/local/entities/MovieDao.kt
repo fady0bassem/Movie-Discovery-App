@@ -37,8 +37,6 @@ interface MovieDao {
             popularity = :popularity,
             posterPath = :posterPath,
             releaseDate = :releaseDate,
-            similarMovies = :similarMovies,
-            isInWatchlist = :isInWatchlist,
             page = :page
         WHERE id = :id
     """
@@ -52,8 +50,6 @@ interface MovieDao {
         popularity: Double?,
         posterPath: String?,
         releaseDate: String?,
-        similarMovies: String?,
-        isInWatchlist: Boolean?,
         page: Int? = null,
     )
 
