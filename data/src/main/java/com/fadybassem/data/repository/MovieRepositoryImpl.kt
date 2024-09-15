@@ -5,7 +5,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.fadybassem.core.HandleApiError
-import com.fadybassem.data.api.ApiService
+import com.fadybassem.data.local.entities.Converters
+import com.fadybassem.data.local.entities.MovieDao
+import com.fadybassem.data.local.mapper.toCreditsDomain
+import com.fadybassem.data.local.mapper.toCreditsEntity
+import com.fadybassem.data.local.mapper.toMovieDomain
+import com.fadybassem.data.local.mapper.toMovieEntity
+import com.fadybassem.data.local.mapper.toMoviesListDomain
+import com.fadybassem.data.remote.api.ApiService
 import com.fadybassem.data.remote.mapper.toCreditsDomain
 import com.fadybassem.data.remote.mapper.toMovieDomain
 import com.fadybassem.data.remote.mapper.toMoviesDomain
@@ -14,10 +21,12 @@ import com.fadybassem.domain.model.Credits
 import com.fadybassem.domain.model.Movie
 import com.fadybassem.domain.model.Movies
 import com.fadybassem.domain.repository.MovieRepository
+import com.fadybassem.util.NetworkManager
 import com.fadybassem.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
@@ -25,18 +34,31 @@ import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
     private val movieApi: ApiService,
+    private val movieDao: MovieDao,
     private val handleApiError: HandleApiError,
+    private val networkManager: NetworkManager,
 ) : MovieRepository {
 
     override fun getPopularMovies(sortBy: String): Flow<Resource<Movies>> = flow {
         try {
             emit(Resource.Loading())
 
-            val response = movieApi.getPopularMovies(sortBy = sortBy)
-            val moviesDomain = response.toMoviesDomain()
+            val cachedMovies = movieDao.getPopularMovies().first()
 
-            emit(Resource.Success(data = moviesDomain))
+            if (cachedMovies.isNotEmpty()) {
+                emit(Resource.Success(data = Movies(results = cachedMovies.toMoviesListDomain())))
+            }
 
+            if (networkManager.isNetworkConnected()) {
+
+                val response = movieApi.getPopularMovies(sortBy = sortBy)
+                val moviesDomain = response.toMoviesDomain()
+
+                val movieEntities = moviesDomain.results.map { it.toMovieEntity(isPopular = true) }
+                movieDao.insertMovies(movieEntities)
+
+                emit(Resource.Success(data = moviesDomain))
+            }
         } catch (exception: HttpException) {
             exception.printStackTrace()
             val handleApiError = handleApiError.handleApiErrors(error = exception)
@@ -60,10 +82,15 @@ class MovieRepositoryImpl @Inject constructor(
             emit(Resource.Loading())
 
             val pagingDataFlow = Pager(config = PagingConfig(
-                pageSize = 20, enablePlaceholders = false, initialLoadSize = 20
+                pageSize = 20,
+                enablePlaceholders = false,
+                initialLoadSize = 20,
+                prefetchDistance = 10
             ), pagingSourceFactory = {
                 MoviePagingSource(
+                    movieDao = movieDao,
                     movieApi = movieApi,
+                    networkManager = networkManager,
                     handleApiError = handleApiError,
                     sortBy = sortBy,
                     year = year
@@ -92,11 +119,26 @@ class MovieRepositoryImpl @Inject constructor(
         try {
             emit(Resource.Loading())
 
-            val response = movieApi.getMovieDetails(id = id)
-            val moviesDomain = response.toMovieDomain()
+            val cachedMovie = movieDao.getMovieById(id)
 
-            emit(Resource.Success(data = moviesDomain))
+            if (cachedMovie != null) {
+                emit(Resource.Success(data = cachedMovie.toMovieDomain()))
+            }
 
+            if (networkManager.isNetworkConnected()) {
+                val response = movieApi.getMovieDetails(id = id)
+                val moviesDomain = response.toMovieDomain()
+
+                val movieEntity = moviesDomain.toMovieEntity()
+                if (cachedMovie != null) {
+                    movieEntity.page = cachedMovie.page
+                    movieEntity.isPopular = cachedMovie.isPopular
+                }
+
+                movieDao.insertMovie(movieEntity)
+
+                emit(Resource.Success(data = moviesDomain))
+            }
         } catch (exception: HttpException) {
             exception.printStackTrace()
             val handleApiError = handleApiError.handleApiErrors(error = exception)
@@ -115,11 +157,21 @@ class MovieRepositoryImpl @Inject constructor(
         try {
             emit(Resource.Loading())
 
-            val response = movieApi.getMovieDetailsCredits(id = id)
-            val moviesDomain = response.toCreditsDomain()
+            val cachedCredits = movieDao.getCreditsById(id)
 
-            emit(Resource.Success(data = moviesDomain))
+            if (cachedCredits != null) {
+                emit(Resource.Success(data = cachedCredits.toCreditsDomain()))
+            }
 
+            if (networkManager.isNetworkConnected()) {
+                val response = movieApi.getMovieDetailsCredits(id = id)
+                val moviesDomain = response.toCreditsDomain()
+
+                val creditsEntity = moviesDomain.toCreditsEntity()
+                movieDao.insertCredits(creditsEntity)
+
+                emit(Resource.Success(data = moviesDomain))
+            }
         } catch (exception: HttpException) {
             exception.printStackTrace()
             val handleApiError = handleApiError.handleApiErrors(error = exception)
@@ -138,11 +190,54 @@ class MovieRepositoryImpl @Inject constructor(
         try {
             emit(Resource.Loading())
 
-            val response = movieApi.getMovieDetailsSimilar(id = id)
-            val moviesDomain = response.toMoviesDomain()
+            val cachedMovie = movieDao.getMovieById(id)
+            var similarMovies: List<Movie> = emptyList()
 
-            emit(Resource.Success(data = moviesDomain))
+            if (cachedMovie != null) {
+                similarMovies = cachedMovie.similarMovies?.let { similarMovieIdsString ->
+                    if (similarMovieIdsString.isNotBlank()) {
+                        val similarMovieIds = Converters().toIntList(similarMovieIdsString)
 
+                        similarMovieIds?.mapNotNull { movieId ->
+                            movieDao.getMovieById(movieId)?.toMovieDomain()
+                        } ?: emptyList()
+                    } else {
+                        emptyList()
+                    }
+                } ?: emptyList()
+
+                emit(Resource.Success(data = Movies(results = similarMovies as ArrayList<Movie>)))
+            }
+
+            if (networkManager.isNetworkConnected()) {
+                val response = movieApi.getMovieDetailsSimilar(id = id)
+                val moviesDomain = response.toMoviesDomain()
+
+                moviesDomain.results.forEach { movie ->
+                    val newMovieId = movie.id ?: -1
+
+                    val originalMovie = movieDao.getMovieById(id)
+                    val existingMovie = movieDao.getMovieById(newMovieId)
+
+                    if (existingMovie == null) {
+                        movieDao.insertMovie(movie.toMovieEntity())
+                    }
+
+                    originalMovie?.let { origMovie ->
+                        val originalSimilarMoviesList = origMovie.similarMovies?.let { similarMovieIdsString ->
+                            Converters().toIntList(similarMovieIdsString)?.toMutableList() ?: mutableListOf()
+                        } ?: mutableListOf()
+
+                        if (!originalSimilarMoviesList.contains(newMovieId)) {
+                            originalSimilarMoviesList.add(newMovieId)
+                        }
+
+                        movieDao.updateSimilarMovies(origMovie.id, Converters().fromIntList(originalSimilarMoviesList as ArrayList<Int>))
+                    }
+                }
+
+                emit(Resource.Success(data = moviesDomain))
+            }
         } catch (exception: HttpException) {
             exception.printStackTrace()
             val handleApiError = handleApiError.handleApiErrors(error = exception)

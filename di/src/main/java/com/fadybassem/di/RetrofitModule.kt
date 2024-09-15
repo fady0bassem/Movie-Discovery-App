@@ -1,6 +1,6 @@
 package com.fadybassem.di
 
-import com.fadybassem.data.api.ApiService
+import com.fadybassem.data.remote.api.ApiService
 import com.fadybassem.util.AppConfiguration
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

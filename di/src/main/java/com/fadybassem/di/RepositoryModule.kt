@@ -1,9 +1,11 @@
 package com.fadybassem.di
 
 import com.fadybassem.core.HandleApiError
-import com.fadybassem.data.api.ApiService
+import com.fadybassem.data.remote.api.ApiService
+import com.fadybassem.data.local.entities.MovieDao
 import com.fadybassem.data.repository.MovieRepositoryImpl
 import com.fadybassem.domain.repository.MovieRepository
+import com.fadybassem.util.NetworkManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,9 +20,13 @@ object RepositoryModule {
     @Provides
     fun provideMovieRepository(
         movieApi: ApiService,
-        handleApiError: HandleApiError
+        handleApiError: HandleApiError,
+        movieDao: MovieDao,
+        networkManager: NetworkManager,
     ): MovieRepository = MovieRepositoryImpl(
         movieApi = movieApi,
-        handleApiError = handleApiError
+        movieDao = movieDao,
+        handleApiError = handleApiError,
+        networkManager = networkManager
     )
 }

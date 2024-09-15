@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.fadybassem.core.R
 import com.fadybassem.domain.model.Credits
@@ -74,7 +75,9 @@ fun DetailsView(
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current).data(movie.posterPath)
                             .error(R.drawable.image_placeholder)
-                            .fallback(R.drawable.image_placeholder).build(),
+                            .fallback(R.drawable.image_placeholder).diskCacheKey(movie.posterPath)
+                            .memoryCacheKey(movie.posterPath).diskCachePolicy(CachePolicy.ENABLED)
+                            .memoryCachePolicy(CachePolicy.ENABLED).build(),
                         contentDescription = stringResource(
                             id = R.string.content_description, "Profile picture"
                         ),
@@ -182,7 +185,7 @@ fun DetailsView(
         }
 
         movieDetailsCredit.value?.cast?.let { castList ->
-            if(castList.isNotEmpty()) {
+            if (castList.isNotEmpty()) {
                 item {
                     Column(
                         modifier = Modifier.padding(

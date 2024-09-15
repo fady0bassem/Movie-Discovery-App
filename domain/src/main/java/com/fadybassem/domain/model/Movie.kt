@@ -29,4 +29,6 @@ data class Movie(
     var video: Boolean? = null,
     var voteAverage: Double? = null,
     var voteCount: Int? = null,
+    val isPopular: Boolean? = null,
+    val similarMovies: ArrayList<Int>? = arrayListOf()
 )

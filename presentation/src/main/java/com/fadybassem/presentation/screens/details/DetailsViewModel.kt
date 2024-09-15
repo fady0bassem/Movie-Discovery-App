@@ -64,13 +64,13 @@ class DetailsViewModel @Inject constructor(
         viewModelScope.launch {
             getMovieDetailsUseCase.execute(id = id).collect {
                 apiStatus.value = it.apiStatus
-                if (it.apiStatus == Status.SUCCESS) {
-                    it.data?.let { movies ->
-                        _movieDetails.value = movies
-                    }
-                } else if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
+
+                it.data?.let { movies ->
+                    _movieDetails.value = movies
+                }
+
+                if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
                     showApiError.value = Pair(true, it.message)
-                    _movieDetails.value = null
                 }
             }
         }
@@ -80,13 +80,13 @@ class DetailsViewModel @Inject constructor(
         viewModelScope.launch {
             getMovieDetailsCreditsUseCase.execute(id = id).collect {
                 apiStatus.value = it.apiStatus
-                if (it.apiStatus == Status.SUCCESS) {
-                    it.data?.let { credits ->
-                        _movieDetailsCredit.value = credits
-                    }
-                } else if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
+
+                it.data?.let { credits ->
+                    _movieDetailsCredit.value = credits
+                }
+
+                if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
                     showApiError.value = Pair(true, it.message)
-                    _movieDetails.value = null
                 }
             }
         }
@@ -96,13 +96,13 @@ class DetailsViewModel @Inject constructor(
         viewModelScope.launch {
             getMovieDetailsSimilarUseCase.execute(id = id).collect {
                 apiStatus.value = it.apiStatus
-                if (it.apiStatus == Status.SUCCESS) {
-                    it.data?.let { movies ->
-                        _movieDetailsSimilar.value = movies
-                    }
-                } else if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
+
+                it.data?.let { movies ->
+                    _movieDetailsSimilar.value = movies
+                }
+
+                if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
                     showApiError.value = Pair(true, it.message)
-                    _movieDetails.value = null
                 }
             }
         }

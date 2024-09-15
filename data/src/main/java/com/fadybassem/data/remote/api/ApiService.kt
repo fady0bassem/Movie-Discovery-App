@@ -1,4 +1,4 @@
-package com.fadybassem.data.api
+package com.fadybassem.data.remote.api
 
 import com.fadybassem.data.remote.response.CreditsResponseModel
 import com.fadybassem.data.remote.response.MovieResponseModel

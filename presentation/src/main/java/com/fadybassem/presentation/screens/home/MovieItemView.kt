@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.fadybassem.core.R
 import com.fadybassem.domain.model.Movie
@@ -67,6 +68,8 @@ internal fun MovieItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current).data(movie.posterPath)
                     .error(R.drawable.image_placeholder).fallback(R.drawable.image_placeholder)
+                    .diskCacheKey(movie.posterPath).memoryCacheKey(movie.posterPath)
+                    .diskCachePolicy(CachePolicy.ENABLED).memoryCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = stringResource(
                     id = R.string.content_description, "Profile picture"

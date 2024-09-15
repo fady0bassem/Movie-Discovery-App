@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.fadybassem.core.R
 import com.fadybassem.domain.model.Cast
@@ -38,7 +39,7 @@ import com.fadybassem.presentation.theme.AppTheme
 @Composable
 private fun CastItemPreview() {
     AppTheme {
-        DummyMovie.credit.cast?.get(0)?.let { CastItemView(cast = it) }
+        DummyMovie.credit.cast.get(0)?.let { CastItemView(cast = it) }
     }
 }
 
@@ -61,6 +62,8 @@ fun CastItemView(cast: Cast) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current).data(cast.profilePath)
                     .error(R.drawable.image_placeholder).fallback(R.drawable.image_placeholder)
+                    .diskCacheKey(cast.profilePath).memoryCacheKey(cast.profilePath)
+                    .diskCachePolicy(CachePolicy.ENABLED).memoryCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = stringResource(
                     id = R.string.content_description, "Profile picture"

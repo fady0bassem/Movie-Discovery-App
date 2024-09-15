@@ -1,8 +1,8 @@
 package com.fadybassem.presentation.screens.home
 
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -41,23 +41,10 @@ class HomeViewModel @Inject constructor(
 
     val showApiError: MutableState<Pair<Boolean, String?>> = mutableStateOf(Pair(false, null))
 
-//    val popularMoviesListState = LazyListState()
-//    val moviesListState = LazyListState()
-
-    var popularMoviesScrollIndex by mutableStateOf(0)
-    var popularMoviesScrollOffset by mutableStateOf(0)
-    var moviesScrollIndex by mutableStateOf(0)
-    var moviesScrollOffset by mutableStateOf(0)
-
-    val popularMoviesListState = LazyListState(
-        firstVisibleItemIndex = popularMoviesScrollIndex,
-        firstVisibleItemScrollOffset = popularMoviesScrollOffset
-    )
-
-    val moviesListState = LazyListState(
-        firstVisibleItemIndex = moviesScrollIndex,
-        firstVisibleItemScrollOffset = moviesScrollOffset
-    )
+    var popularMoviesScrollIndex by mutableIntStateOf(0)
+    var popularMoviesScrollOffset by mutableIntStateOf(0)
+    var moviesScrollIndex by mutableIntStateOf(0)
+    var moviesScrollOffset by mutableIntStateOf(0)
 
     init {
         getMoviesSequentially()
@@ -73,13 +60,13 @@ class HomeViewModel @Inject constructor(
     private suspend fun fetchPopularMovies() {
         moviesUseCase.execute(sortBy = SORT_BY_POPULARITY_DESC).collect {
             apiStatus.value = it.apiStatus
-            if (it.apiStatus == Status.SUCCESS) {
-                it.data?.results?.let { movieArrayList ->
-                    _popularMovies.value = movieArrayList
-                }
-            } else if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
+
+            it.data?.results?.let { movieArrayList ->
+                _popularMovies.value = movieArrayList
+            }
+
+            if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
                 showApiError.value = Pair(true, it.message)
-                _popularMovies.value = emptyList()
             }
         }
     }
@@ -89,18 +76,18 @@ class HomeViewModel @Inject constructor(
             sortBy = SORT_BY_RELEASE_DATE_DESC, year = YEAR, scope = viewModelScope
         ).collect {
             apiStatus.value = it.apiStatus
-            if (it.apiStatus == Status.SUCCESS) {
-                it.data?.let { movieArrayList ->
-                    val transformedPagingData = movieArrayList.map { movie ->
-                        val releaseMonth = LocalDate.parse(movie.releaseDate).month.toString()
-                        movie to releaseMonth
-                    }
 
-                    _moviesPageFlow.value = transformedPagingData
+            it.data?.let { movieArrayList ->
+                val transformedPagingData = movieArrayList.map { movie ->
+                    val releaseMonth = LocalDate.parse(movie.releaseDate).month.toString()
+                    movie to releaseMonth
                 }
-            } else if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
+
+                _moviesPageFlow.value = transformedPagingData
+            }
+
+            if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
                 showApiError.value = Pair(true, it.message)
-                _moviesPageFlow.value = PagingData.empty()
             }
         }
     }

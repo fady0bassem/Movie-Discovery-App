@@ -72,6 +72,11 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.java.inject)
 
+    implementation (libs.kotlinx.coroutines.android)
+    implementation (libs.kotlinx.coroutines.core)
+
+    implementation(libs.coil.compose)
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)
