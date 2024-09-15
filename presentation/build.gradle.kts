@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.runtime)
+    debugImplementation(libs.ui.tooling)
 
     implementation(libs.coil.compose)
 
@@ -75,7 +76,7 @@ dependencies {
     implementation (libs.androidx.paging.runtime.ktx)
     implementation (libs.androidx.paging.compose)
 
-    debugImplementation(libs.ui.tooling)
+    implementation(libs.androidx.runtime.livedata)
 
     testImplementation(libs.junit)
 

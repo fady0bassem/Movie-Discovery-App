@@ -1,4 +1,4 @@
-package com.fadybassem.domain.usecase
+package com.fadybassem.domain.usecase.details
 
 import com.fadybassem.domain.model.Movies
 import com.fadybassem.domain.repository.MovieRepository

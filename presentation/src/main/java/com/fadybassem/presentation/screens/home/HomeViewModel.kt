@@ -11,8 +11,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.fadybassem.domain.model.Movie
-import com.fadybassem.domain.usecase.Get2024MoviesPagingSourceUseCase
-import com.fadybassem.domain.usecase.GetPopularMoviesUseCase
+import com.fadybassem.domain.usecase.movie.Get2024MoviesPagingSourceUseCase
+import com.fadybassem.domain.usecase.movie.GetPopularMoviesUseCase
 import com.fadybassem.util.SORT_BY_POPULARITY_DESC
 import com.fadybassem.util.SORT_BY_RELEASE_DATE_DESC
 import com.fadybassem.util.Status

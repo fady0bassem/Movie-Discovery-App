@@ -31,22 +31,22 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.fadybassem.core.R
-import com.fadybassem.domain.model.Cast
+import com.fadybassem.domain.model.Crew
 import com.fadybassem.presentation.components.screen_size.rememberWindowInfo
 import com.fadybassem.presentation.dummy.DummyMovie
 import com.fadybassem.presentation.theme.AppTheme
 
 @Preview(showBackground = true, showSystemUi = true, apiLevel = 33)
 @Composable
-private fun CastItemPreview() {
+private fun CrewItemPreview() {
     AppTheme {
-        CastItemView(cast = DummyMovie.credit.cast[0])
+        CrewItemView(crew = DummyMovie.credit.crew[0])
     }
 }
 
 
 @Composable
-fun CastItemView(cast: Cast) {
+fun CrewItemView(crew: Crew) {
 
     val windowInfo = rememberWindowInfo()
 
@@ -61,9 +61,9 @@ fun CastItemView(cast: Cast) {
     ) {
         Column(modifier = Modifier.wrapContentSize()) {
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current).data(cast.profilePath)
+                model = ImageRequest.Builder(LocalContext.current).data(crew.profilePath)
                     .error(R.drawable.image_placeholder).fallback(R.drawable.image_placeholder)
-                    .diskCacheKey(cast.profilePath).memoryCacheKey(cast.profilePath)
+                    .diskCacheKey(crew.profilePath).memoryCacheKey(crew.profilePath)
                     .diskCachePolicy(CachePolicy.ENABLED).memoryCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = stringResource(
@@ -78,7 +78,7 @@ fun CastItemView(cast: Cast) {
 
             Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding / 2))
 
-            cast.name?.let {
+            crew.name?.let {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,7 +87,7 @@ fun CastItemView(cast: Cast) {
                             end = windowInfo.windowDimensions.verticalPadding * 2
                         )
                         .align(Alignment.CenterHorizontally),
-                    text = it,
+                    text = it + it,
                     color = Color.Black,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
@@ -96,7 +96,7 @@ fun CastItemView(cast: Cast) {
                     overflow = TextOverflow.Ellipsis
                 )
 
-                cast.character?.let { it1 ->
+                crew.knownForDepartment?.let { it1 ->
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()

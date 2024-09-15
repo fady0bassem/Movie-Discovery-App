@@ -38,8 +38,12 @@ fun DetailsScreen(navController: NavHostController, viewModel: DetailsViewModel 
                 movieDetails = movieDetails,
                 movieDetailsCredit = movieDetailsCredit,
                 movieDetailsSimilar = movieDetailsSimilar,
+                bookmarkStata = viewModel.bookmarkStata,
                 onMovieClick = {
                     navController.navigate(MainRoutes.Details.route + "/${it.id}")
+                },
+                bookmarkAction = {
+                    viewModel.handleBookmarkAction(it)
                 }
             )
 

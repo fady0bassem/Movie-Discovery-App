@@ -43,21 +43,46 @@ class MovieRepositoryImpl @Inject constructor(
         try {
             emit(Resource.Loading())
 
-            val cachedMovies = movieDao.getPopularMovies().first()
-
-            if (cachedMovies.isNotEmpty()) {
-                emit(Resource.Success(data = Movies(results = cachedMovies.toMoviesListDomain())))
-            }
+            var cachedMovies = movieDao.getPopularMovies().first()
 
             if (networkManager.isNetworkConnected()) {
-
                 val response = movieApi.getPopularMovies(sortBy = sortBy)
                 val moviesDomain = response.toMoviesDomain()
 
-                val movieEntities = moviesDomain.results.map { it.toMovieEntity(isPopular = true) }
-                movieDao.insertMovies(movieEntities)
+                moviesDomain.results.forEach { movie ->
+                    val cachedMovie = cachedMovies.find { it.id == movie.id }
+                    if (cachedMovie != null) {
+                        movieDao.updateMovieFields(
+                            id = movie.id,
+                            adult = movie.adult,
+                            genreNames = movie.genreNames,
+                            originalTitle = movie.originalTitle,
+                            overview = movie.overview,
+                            popularity = movie.popularity,
+                            posterPath = movie.posterPath,
+                            releaseDate = movie.releaseDate,
+                            similarMovies = Converters().fromIntList(movie.similarMovies),
+                            isInWatchlist = movie.isInWatchlist,
+                            page = cachedMovie.page
+                        )
+                    } else {
+                        movieDao.insertMovie(movie.toMovieEntity(isPopular = true))
+                    }
+                }
 
-                emit(Resource.Success(data = moviesDomain))
+                cachedMovies = movieDao.getPopularMovies().first()
+
+                if (cachedMovies.isNotEmpty()) {
+                    emit(Resource.Success(data = Movies(results = cachedMovies.toMoviesListDomain())))
+                } else {
+                    emit(Resource.Success(data = moviesDomain))
+                }
+            } else {
+                if (cachedMovies.isNotEmpty()) {
+                    emit(Resource.Success(data = Movies(results = cachedMovies.toMoviesListDomain())))
+                } else {
+                    emit(Resource.Failed("No data available"))
+                }
             }
         } catch (exception: HttpException) {
             exception.printStackTrace()
@@ -119,25 +144,42 @@ class MovieRepositoryImpl @Inject constructor(
         try {
             emit(Resource.Loading())
 
-            val cachedMovie = movieDao.getMovieById(id)
-
-            if (cachedMovie != null) {
-                emit(Resource.Success(data = cachedMovie.toMovieDomain()))
-            }
+            var cachedMovie = movieDao.getMovieById(id)
 
             if (networkManager.isNetworkConnected()) {
                 val response = movieApi.getMovieDetails(id = id)
-                val moviesDomain = response.toMovieDomain()
+                val movieDomain = response.toMovieDomain()
 
-                val movieEntity = moviesDomain.toMovieEntity()
                 if (cachedMovie != null) {
-                    movieEntity.page = cachedMovie.page
-                    movieEntity.isPopular = cachedMovie.isPopular
+                    movieDao.updateMovieFields(
+                        id = movieDomain.id,
+                        adult = movieDomain.adult,
+                        genreNames = movieDomain.genreNames,
+                        originalTitle = movieDomain.originalTitle,
+                        overview = movieDomain.overview,
+                        popularity = movieDomain.popularity,
+                        posterPath = movieDomain.posterPath,
+                        releaseDate = movieDomain.releaseDate,
+                        similarMovies = cachedMovie.similarMovies,
+                        isInWatchlist = cachedMovie.isInWatchlist,
+                        page = cachedMovie.page
+                    )
+
+                } else {
+                    movieDao.insertMovie(movieDomain.toMovieEntity(page = cachedMovie?.page))
                 }
 
-                movieDao.insertMovie(movieEntity)
+                cachedMovie = movieDao.getMovieById(id)
 
-                emit(Resource.Success(data = moviesDomain))
+                if (cachedMovie != null) {
+                    emit(Resource.Success(data = cachedMovie.toMovieDomain()))
+                } else {
+                    emit(Resource.Success(data = movieDomain))
+                }
+            } else {
+                if (cachedMovie != null) {
+                    emit(Resource.Success(data = cachedMovie.toMovieDomain()))
+                }
             }
         } catch (exception: HttpException) {
             exception.printStackTrace()
@@ -157,11 +199,7 @@ class MovieRepositoryImpl @Inject constructor(
         try {
             emit(Resource.Loading())
 
-            val cachedCredits = movieDao.getCreditsById(id)
-
-            if (cachedCredits != null) {
-                emit(Resource.Success(data = cachedCredits.toCreditsDomain()))
-            }
+            var cachedCredits = movieDao.getCreditsById(id)
 
             if (networkManager.isNetworkConnected()) {
                 val response = movieApi.getMovieDetailsCredits(id = id)
@@ -170,7 +208,17 @@ class MovieRepositoryImpl @Inject constructor(
                 val creditsEntity = moviesDomain.toCreditsEntity()
                 movieDao.insertCredits(creditsEntity)
 
-                emit(Resource.Success(data = moviesDomain))
+                cachedCredits = movieDao.getCreditsById(id)
+
+                if (cachedCredits != null) {
+                    emit(Resource.Success(data = cachedCredits.toCreditsDomain()))
+                } else {
+                    emit(Resource.Success(data = moviesDomain))
+                }
+            } else {
+                if (cachedCredits != null) {
+                    emit(Resource.Success(data = cachedCredits.toCreditsDomain()))
+                }
             }
         } catch (exception: HttpException) {
             exception.printStackTrace()
@@ -193,22 +241,6 @@ class MovieRepositoryImpl @Inject constructor(
             val cachedMovie = movieDao.getMovieById(id)
             var similarMovies: List<Movie> = emptyList()
 
-            if (cachedMovie != null) {
-                similarMovies = cachedMovie.similarMovies?.let { similarMovieIdsString ->
-                    if (similarMovieIdsString.isNotBlank()) {
-                        val similarMovieIds = Converters().toIntList(similarMovieIdsString)
-
-                        similarMovieIds?.mapNotNull { movieId ->
-                            movieDao.getMovieById(movieId)?.toMovieDomain()
-                        } ?: emptyList()
-                    } else {
-                        emptyList()
-                    }
-                } ?: emptyList()
-
-                emit(Resource.Success(data = Movies(results = similarMovies as ArrayList<Movie>)))
-            }
-
             if (networkManager.isNetworkConnected()) {
                 val response = movieApi.getMovieDetailsSimilar(id = id)
                 val moviesDomain = response.toMoviesDomain()
@@ -224,19 +256,52 @@ class MovieRepositoryImpl @Inject constructor(
                     }
 
                     originalMovie?.let { origMovie ->
-                        val originalSimilarMoviesList = origMovie.similarMovies?.let { similarMovieIdsString ->
-                            Converters().toIntList(similarMovieIdsString)?.toMutableList() ?: mutableListOf()
-                        } ?: mutableListOf()
+                        val originalSimilarMoviesList =
+                            origMovie.similarMovies?.let { similarMovieIdsString ->
+                                Converters().toIntList(similarMovieIdsString)?.toMutableList()
+                                    ?: mutableListOf()
+                            } ?: mutableListOf()
 
                         if (!originalSimilarMoviesList.contains(newMovieId)) {
                             originalSimilarMoviesList.add(newMovieId)
                         }
 
-                        movieDao.updateSimilarMovies(origMovie.id, Converters().fromIntList(originalSimilarMoviesList as ArrayList<Int>))
+                        movieDao.updateSimilarMovies(
+                            origMovie.id,
+                            Converters().fromIntList(originalSimilarMoviesList as ArrayList<Int>)
+                        )
                     }
                 }
 
-                emit(Resource.Success(data = moviesDomain))
+                similarMovies = cachedMovie?.similarMovies?.let { similarMovieIdsString ->
+                    if (similarMovieIdsString.isNotBlank()) {
+                        val similarMovieIds = Converters().toIntList(similarMovieIdsString)
+
+                        similarMovieIds?.mapNotNull { movieId ->
+                            movieDao.getMovieById(movieId)?.toMovieDomain()
+                        } ?: emptyList()
+                    } else {
+                        emptyList()
+                    }
+                } ?: emptyList()
+
+                emit(Resource.Success(data = Movies(results = if (similarMovies.isEmpty()) moviesDomain.results else similarMovies as ArrayList<Movie>)))
+            } else {
+                if (cachedMovie != null) {
+                    similarMovies = cachedMovie.similarMovies?.let { similarMovieIdsString ->
+                        if (similarMovieIdsString.isNotBlank()) {
+                            val similarMovieIds = Converters().toIntList(similarMovieIdsString)
+
+                            similarMovieIds?.mapNotNull { movieId ->
+                                movieDao.getMovieById(movieId)?.toMovieDomain()
+                            } ?: emptyList()
+                        } else {
+                            emptyList()
+                        }
+                    } ?: emptyList()
+
+                    emit(Resource.Success(data = Movies(results = similarMovies as ArrayList<Movie>)))
+                }
             }
         } catch (exception: HttpException) {
             exception.printStackTrace()

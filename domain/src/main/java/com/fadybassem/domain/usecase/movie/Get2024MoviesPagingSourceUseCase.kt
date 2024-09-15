@@ -1,4 +1,4 @@
-package com.fadybassem.domain.usecase
+package com.fadybassem.domain.usecase.movie
 
 import androidx.paging.PagingData
 import com.fadybassem.domain.model.Movie

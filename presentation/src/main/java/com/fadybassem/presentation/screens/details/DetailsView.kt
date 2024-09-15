@@ -14,11 +14,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +53,9 @@ private fun DetailsScreenPreview() {
         DetailsView(movieDetails = remember { mutableStateOf(DummyMovie.movie) },
             movieDetailsCredit = remember { mutableStateOf(DummyMovie.credit) },
             movieDetailsSimilar = remember { mutableStateOf(DummyMovie.movies) },
-            onMovieClick = {})
+            bookmarkStata = remember { mutableStateOf(false) },
+            onMovieClick = {},
+            bookmarkAction = {})
     }
 }
 
@@ -60,7 +64,9 @@ fun DetailsView(
     movieDetails: State<Movie?>,
     movieDetailsCredit: State<Credits?>,
     movieDetailsSimilar: State<Movies?>,
+    bookmarkStata: MutableState<Boolean>,
     onMovieClick: (Movie) -> Unit,
+    bookmarkAction: (Movie) -> Unit,
 ) {
     val windowInfo = rememberWindowInfo()
 
@@ -132,10 +138,12 @@ fun DetailsView(
                                 )
                             }
 
-                            IconButton(
-                                modifier = Modifier.align(Alignment.CenterVertically),
-                                onClick = {}) {
-                                Icon(imageVector = Icons.Filled.Bookmark, contentDescription = null)
+                            IconButton(modifier = Modifier.align(Alignment.CenterVertically),
+                                onClick = { bookmarkAction.invoke(movie) }) {
+                                Icon(
+                                    imageVector = if (bookmarkStata.value) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder,
+                                    contentDescription = null
+                                )
                             }
                         }
 
@@ -210,6 +218,40 @@ fun DetailsView(
                             items(castList.size) { index ->
                                 val cast = castList[index]
                                 CastItemView(cast = cast)
+                                Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        movieDetailsCredit.value?.crew?.let { crewList ->
+            if (crewList.isNotEmpty()) {
+                item {
+                    Column(
+                        modifier = Modifier.padding(
+                            start = windowInfo.windowDimensions.verticalPadding * 2,
+                            end = windowInfo.windowDimensions.verticalPadding * 2
+                        )
+                    ) {
+                        Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
+
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = stringResource(id = R.string.movie_crew),
+                            color = Black,
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Start,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+
+                        Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding / 2))
+
+                        LazyRow {
+                            items(crewList.size) { index ->
+                                val crew = crewList[index]
+                                CrewItemView(crew = crew)
                                 Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
                             }
                         }

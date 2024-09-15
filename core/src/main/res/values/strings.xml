@@ -34,5 +34,6 @@
     <string name="movie_genres">Genres</string>
     <string name="movie_overview">Overview</string>
     <string name="movie_cast">Cast</string>
+    <string name="movie_crew">Crew</string>
     <string name="movie_similar_movies">Similar Movies</string>
 </resources>
