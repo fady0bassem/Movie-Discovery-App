@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
@@ -215,8 +216,9 @@ fun DetailsView(
                         Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding / 2))
 
                         LazyRow {
-                            items(castList.size) { index ->
-                                val cast = castList[index]
+                            itemsIndexed(
+                                items = castList,
+                                key = { index, item -> item.id ?: index }) { index, cast ->
                                 CastItemView(cast = cast)
                                 Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
                             }
@@ -249,8 +251,9 @@ fun DetailsView(
                         Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding / 2))
 
                         LazyRow {
-                            items(crewList.size) { index ->
-                                val crew = crewList[index]
+                            itemsIndexed(
+                                items = crewList,
+                                key = { index, item -> item.id ?: index }) { index, crew ->
                                 CrewItemView(crew = crew)
                                 Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
                             }
@@ -283,8 +286,9 @@ fun DetailsView(
                         Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding / 2))
 
                         LazyRow {
-                            items(movies.size) { index ->
-                                val movie = movies[index]
+                            itemsIndexed(
+                                items = movies,
+                                key = { index, item -> item.id ?: index }) { index, movie ->
                                 SimilarMovieItemView(movie = movie, onItemClick = {
                                     onMovieClick.invoke(it)
                                 })

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,6 +36,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.fadybassem.core.R
 import com.fadybassem.domain.model.Movie
 import com.fadybassem.presentation.components.screen_size.rememberWindowInfo
@@ -134,12 +137,15 @@ fun HomeView(
                     Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
 
                     LazyRow(state = popularMoviesListState) {
-                        items(popularMovies.value.size) { index ->
-                            val movie = popularMovies.value[index]
+                        itemsIndexed(
+                            items = popularMovies.value,
+                            key = { index, item -> item.id ?: index },
+                        ) { index, movie ->
                             PopularMovieItemView(movie = movie, onItemClick = {
                                 onMovieClick.invoke(it)
                             })
                             Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
+
                         }
                     }
 
@@ -192,15 +198,18 @@ fun HomeView(
             }
         }
 
-        items(moviesPageFlow.itemCount) { index ->
+        items(count = moviesPageFlow.itemCount,
+            key = moviesPageFlow.itemKey { movieStringPair -> movieStringPair.first.id!! },
+            contentType = { moviesPageFlow.itemContentType { movieStringPair -> movieStringPair.first.id!! } }) { index ->
+
             val movieWithMonth = moviesPageFlow[index]
 
             movieWithMonth?.let { (movie, month) ->
 
-                val previousMovieWithMonth = if (index > 0) moviesPageFlow[index - 1] else null
+                /*val previousMovieWithMonth = if (index > 0) moviesPageFlow[index - 1] else null
                 val previousMonth = previousMovieWithMonth?.second
 
-                /*if (previousMonth != month) {
+                if (previousMonth != month) {
                     Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
 
                     Text(
