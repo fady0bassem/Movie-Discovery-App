@@ -25,7 +25,6 @@ class WatchlistViewModel @Inject constructor(
     val watchlistMovies: LiveData<List<Movie>> = _watchlistMovies
 
     private fun fetchWatchlistMovies() = viewModelScope.launch {
-        _watchlistMovies.value = emptyList()
         _watchlistMovies.value = getWatchlistMoviesUseCase.execute()
     }
 

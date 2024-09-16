@@ -38,6 +38,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.fadybassem.core.R
 import com.fadybassem.domain.model.Movie
 import com.fadybassem.presentation.components.screen_size.rememberWindowInfo
+import com.fadybassem.presentation.components.text.EmptyListText
 import com.fadybassem.presentation.dummy.DummyMovie
 import com.fadybassem.presentation.theme.AppTheme
 
@@ -108,6 +109,13 @@ fun HomeView(
     LazyColumn(
         modifier = Modifier.fillMaxSize(), state = moviesListState
     ) {
+
+        if (popularMovies.value.isEmpty() && moviesPageFlow.itemCount == 0) {
+            item {
+                Box(modifier = Modifier.fillParentMaxSize()) { EmptyListText() }
+            }
+        }
+
         item {
             Column(
                 modifier = Modifier.padding(
@@ -137,15 +145,6 @@ fun HomeView(
 
                     Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
                 }
-
-                Text(
-                    text = stringResource(id = R.string.year_movies),
-                    color = Black,
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                )
-
-                Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
             }
         }
 
@@ -169,6 +168,26 @@ fun HomeView(
 
                     Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding * 2))
 
+                }
+            }
+        }
+
+        if (moviesPageFlow.itemCount > 0) {
+            item {
+                Column(
+                    modifier = Modifier.padding(
+                        start = windowInfo.windowDimensions.verticalPadding * 2,
+                        end = windowInfo.windowDimensions.verticalPadding * 2
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.year_movies),
+                        color = Black,
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))
                 }
             }
         }

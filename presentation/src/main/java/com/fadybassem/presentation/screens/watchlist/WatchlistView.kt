@@ -1,5 +1,6 @@
 package com.fadybassem.presentation.screens.watchlist
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.fadybassem.domain.model.Movie
 import com.fadybassem.presentation.components.screen_size.rememberWindowInfo
+import com.fadybassem.presentation.components.text.EmptyListText
 import com.fadybassem.presentation.dummy.DummyMovie
 import com.fadybassem.presentation.screens.home.MovieItemView
 import com.fadybassem.presentation.theme.AppTheme
@@ -20,8 +22,7 @@ import com.fadybassem.presentation.theme.AppTheme
 @Composable
 private fun WatchlistScreenPreview() {
     AppTheme {
-        WatchlistView(
-            watchlistMovies = remember { mutableStateOf(listOf(DummyMovie.movie)) },
+        WatchlistView(watchlistMovies = remember { mutableStateOf(listOf(DummyMovie.movie)) },
             onMovieClick = {})
     }
 }
@@ -34,6 +35,11 @@ fun WatchlistView(watchlistMovies: State<List<Movie>>, onMovieClick: (Movie) -> 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
+        if (watchlistMovies.value.isEmpty()) {
+            item {
+                Box(modifier = Modifier.fillParentMaxSize()) { EmptyListText() }
+            }
+        }
 
         item {
             Spacer(modifier = Modifier.padding(windowInfo.windowDimensions.verticalPadding))

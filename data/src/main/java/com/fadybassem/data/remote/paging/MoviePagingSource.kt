@@ -11,6 +11,7 @@ import com.fadybassem.data.remote.api.ApiService
 import com.fadybassem.data.local.mapper.toMovieDomain
 import com.fadybassem.data.local.mapper.toMovieEntity
 import com.fadybassem.domain.model.Movie
+import com.fadybassem.util.AppConfiguration.Companion.API_KEY
 import com.fadybassem.util.NetworkManager
 import retrofit2.HttpException
 
@@ -64,7 +65,7 @@ class MoviePagingSource(
     }
 
     private suspend fun fetchMoviesFromNetwork(page: Int, cachedMovies: List<MovieEntity>): LoadResult<Int, Movie> {
-        val response = movieApi.get2024Movies(sortBy = sortBy, year = year, page = page)
+        val response = movieApi.get2024Movies(sortBy = sortBy, year = year, page = page, apiKey = API_KEY)
         val data = response.toMoviesDomain().results
 
         data.forEach { movie->
@@ -95,7 +96,7 @@ class MoviePagingSource(
 
     private suspend fun updateCacheWithNetworkData(page: Int, cachedMovies: List<MovieEntity>) {
         try {
-            val response = movieApi.get2024Movies(sortBy = sortBy, year = year, page = page)
+            val response = movieApi.get2024Movies(sortBy = sortBy, year = year, page = page, apiKey = API_KEY)
             val data = response.toMoviesDomain().results
 
             data.forEach { movie->

@@ -62,7 +62,9 @@ class HomeViewModel @Inject constructor(
             apiStatus.value = it.apiStatus
 
             it.data?.results?.let { movieArrayList ->
-                _popularMovies.value = movieArrayList
+                if (_popularMovies.value != movieArrayList) {
+                    _popularMovies.value = movieArrayList
+                }
             }
 
             if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {
@@ -83,7 +85,9 @@ class HomeViewModel @Inject constructor(
                     movie to releaseMonth
                 }
 
-                _moviesPageFlow.value = transformedPagingData
+                if (_moviesPageFlow.value != transformedPagingData) {
+                    _moviesPageFlow.value = transformedPagingData
+                }
             }
 
             if (it.apiStatus == Status.ERROR || it.apiStatus == Status.FAILED) {

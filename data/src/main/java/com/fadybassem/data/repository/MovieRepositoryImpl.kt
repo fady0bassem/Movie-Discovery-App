@@ -21,6 +21,7 @@ import com.fadybassem.domain.model.Credits
 import com.fadybassem.domain.model.Movie
 import com.fadybassem.domain.model.Movies
 import com.fadybassem.domain.repository.MovieRepository
+import com.fadybassem.util.AppConfiguration.Companion.API_KEY
 import com.fadybassem.util.NetworkManager
 import com.fadybassem.util.Resource
 import kotlinx.coroutines.CoroutineScope
@@ -46,7 +47,7 @@ class MovieRepositoryImpl @Inject constructor(
             var cachedMovies = movieDao.getPopularMovies().first()
 
             if (networkManager.isNetworkConnected()) {
-                val response = movieApi.getPopularMovies(sortBy = sortBy)
+                val response = movieApi.getPopularMovies(sortBy = sortBy, apiKey = API_KEY)
                 val moviesDomain = response.toMoviesDomain()
 
                 moviesDomain.results.forEach { movie ->
@@ -145,7 +146,7 @@ class MovieRepositoryImpl @Inject constructor(
             var cachedMovie = movieDao.getMovieById(id)
 
             if (networkManager.isNetworkConnected()) {
-                val response = movieApi.getMovieDetails(id = id)
+                val response = movieApi.getMovieDetails(id = id, apiKey = API_KEY)
                 val movieDomain = response.toMovieDomain()
 
                 if (cachedMovie != null) {
@@ -198,7 +199,7 @@ class MovieRepositoryImpl @Inject constructor(
             var cachedCredits = movieDao.getCreditsById(id)
 
             if (networkManager.isNetworkConnected()) {
-                val response = movieApi.getMovieDetailsCredits(id = id)
+                val response = movieApi.getMovieDetailsCredits(id = id, apiKey = API_KEY)
                 val moviesDomain = response.toCreditsDomain()
 
                 val creditsEntity = moviesDomain.toCreditsEntity()
@@ -238,7 +239,7 @@ class MovieRepositoryImpl @Inject constructor(
             var similarMovies: List<Movie> = emptyList()
 
             if (networkManager.isNetworkConnected()) {
-                val response = movieApi.getMovieDetailsSimilar(id = id)
+                val response = movieApi.getMovieDetailsSimilar(id = id, apiKey = API_KEY)
                 val moviesDomain = response.toMoviesDomain()
 
                 moviesDomain.results.forEach { movie ->

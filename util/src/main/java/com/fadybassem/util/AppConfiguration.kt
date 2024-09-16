@@ -4,6 +4,6 @@ class AppConfiguration {
     companion object{
         const val API_URL: String = "https://api.themoviedb.org/3/"
         const val IMAGE_BASE_URL: String = "https://image.tmdb.org/t/p/w1280"
-        const val TOKEN: String = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzZjNkYjU4M2VhNmI1YWYzMzBmMWIyNDVjYTE0ZTdjNyIsIm5iZiI6MTcyNjE0MDQwNy42MjA1OTQsInN1YiI6IjVmMDhlZTJmNWUxMjAwMDAzOGU5ZmFjYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2sTw6k38mLt_14cX5_6CVOv3kGmJCfGyxD8pOtB4YMg"
+        const val API_KEY: String = "3f3db583ea6b5af330f1b245ca14e7c7"
     }
 }
