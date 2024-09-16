@@ -133,21 +133,21 @@ implementation(project(":core")) // Util depends on core
 
 <div style="display: flex; flex-wrap: wrap; gap: 5px;"> 
   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/1.png" width="200" alt="Screenshot 4" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
-  <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/2.png" width="200" alt="Screenshot 5" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
-   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/3.png" width="200" alt="Screenshot 4" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
+  <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/2.png" width="200" alt="Screenshot 5" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;"> 
+  <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/3.png" width="200" alt="Screenshot 4" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/4.png" width="200" alt="Screenshot 5" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
 </div>
 
 <div style="display: flex; flex-wrap: wrap; gap: 5px;"> 
   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/5.png" width="200" alt="Screenshot 4" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
-  <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/6.png" width="200" alt="Screenshot 5" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
-   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/7.png" width="200" alt="Screenshot 4" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
+  <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/6.png" width="200" alt="Screenshot 5" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;"> 
+  <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/7.png" width="200" alt="Screenshot 4" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/8.png" width="200" alt="Screenshot 5" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
 </div>
 
 <div style="display: flex; flex-wrap: wrap; gap: 5px;"> 
   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/9.png" width="200" alt="Screenshot 4" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/10.png" width="200" alt="Screenshot 5" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
-   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/11.png" width="200" alt="Screenshot 4" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
+  <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/11.png" width="200" alt="Screenshot 4" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
   <img src="https://github.com/fady0bassem/Movie-Discovery-App/blob/main/screenshots/12.png" width="200" alt="Screenshot 5" style="flex: 1 1 calc(33.333% - 10px); max-width: 100%;">
 </div>
