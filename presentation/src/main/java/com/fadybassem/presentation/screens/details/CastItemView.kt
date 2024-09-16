@@ -67,7 +67,7 @@ fun CastItemView(cast: Cast) {
                     .diskCachePolicy(CachePolicy.ENABLED).memoryCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = stringResource(
-                    id = R.string.content_description, "Profile picture"
+                    id = R.string.content_description, "cast"
                 ),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

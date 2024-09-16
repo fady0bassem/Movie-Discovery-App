@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +52,8 @@ internal fun PopularMovieItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
         modifier = Modifier
             .size(windowInfo.windowDimensions.verticalPadding * 24)
             .wrapContentSize()
-            .clickable { onItemClick.invoke(movie) },
+            .clickable { onItemClick.invoke(movie) }
+            .semantics{testTag = "card"},
         elevation = CardDefaults.cardElevation(0.dp),
         shape = RoundedCornerShape(windowInfo.windowDimensions.verticalPadding * 2),
         colors = CardDefaults.cardColors(containerColor = White),
@@ -67,7 +70,7 @@ internal fun PopularMovieItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
                     .memoryCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = stringResource(
-                    id = R.string.content_description, "Profile picture"
+                    id = R.string.content_description, "poster"
                 ),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.background(Color.LightGray)
@@ -90,7 +93,7 @@ internal fun PopularMovieItemView(movie: Movie, onItemClick: (Movie) -> Unit) {
                         color = White,
                         textAlign = TextAlign.Center,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
             }

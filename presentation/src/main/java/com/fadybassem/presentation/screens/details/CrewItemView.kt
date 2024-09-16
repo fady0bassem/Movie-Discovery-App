@@ -67,7 +67,7 @@ fun CrewItemView(crew: Crew) {
                     .diskCachePolicy(CachePolicy.ENABLED).memoryCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = stringResource(
-                    id = R.string.content_description, "Profile picture"
+                    id = R.string.content_description, "crew"
                 ),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -87,7 +87,7 @@ fun CrewItemView(crew: Crew) {
                             end = windowInfo.windowDimensions.verticalPadding * 2
                         )
                         .align(Alignment.CenterHorizontally),
-                    text = it + it,
+                    text = it,
                     color = Color.Black,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
